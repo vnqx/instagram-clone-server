@@ -11,6 +11,11 @@ type PostPreview struct {
 	CreatedAt string `json:"createdAt"`
 }
 
+type CreatePostInput struct {
+	Description string
+	Photos []string
+}
+
 
 func (api *api) GetAllPosts() ([]*PostPreview, error) {
 	rows, err := api.db.Query(
@@ -36,4 +41,16 @@ func (api *api) GetAllPosts() ([]*PostPreview, error) {
 		return nil, err
 	}
 	return ps, nil
+}
+
+func (api *api) CreatePost(input CreatePostInput, userId string) error {
+	_, err := api.db.Exec(
+		`INSERT INTO "Post" (description, photos, user_id) VALUES ($1, $2, $3)`,
+		input.Description, pq.Array(input.Photos), userId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -22,6 +22,7 @@ func main() {
 
 	r := mux.NewRouter()
 	r.HandleFunc("/posts", handler.AllPosts(api)).Methods("GET")
+	r.HandleFunc("/posts", handler.CreatePost(api)).Methods("POST")
 
 	r.Use(middleware.LoggerMiddleware)
 	r.Use(mux.CORSMethodMiddleware(r))
